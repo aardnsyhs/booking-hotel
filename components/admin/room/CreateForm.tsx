@@ -1,11 +1,14 @@
 "use client";
+import { saveRoom } from "@/lib/actions";
+import { Amenities } from "@prisma/client";
 import { type PutBlobResult } from "@vercel/blob";
+import clsx from "clsx";
 import Image from "next/image";
-import { useRef, useState, useTransition } from "react";
+import { useActionState, useRef, useState, useTransition } from "react";
 import { IoCloudUploadOutline, IoTrashOutline } from "react-icons/io5";
 import { BarLoader } from "react-spinners";
 
-const CreateForm = () => {
+const CreateForm = ({ amenities }: { amenities: Amenities[] }) => {
   const inputFileRef = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState("");
   const [message, setMessage] = useState("");
@@ -48,8 +51,13 @@ const CreateForm = () => {
     });
   };
 
+  const [state, formAction, isPending] = useActionState(
+    saveRoom.bind(null, image),
+    null
+  );
+
   return (
-    <form action="">
+    <form action={formAction}>
       <div className="grid md:grid-cols-12 gap-5">
         <div className="col-span-8 bg-white p-4">
           <div className="mb-4">
@@ -60,7 +68,9 @@ const CreateForm = () => {
               placeholder="Room Name"
             />
             <div aria-live="polite" aria-atomic="true">
-              <span className="text-sm text-red-500 mt-2">message</span>
+              <span className="text-sm text-red-500 mt-2">
+                {state?.error?.name}
+              </span>
             </div>
           </div>
           <div className="mb-4">
@@ -71,20 +81,29 @@ const CreateForm = () => {
               placeholder="Description"
             ></textarea>
             <div aria-live="polite" aria-atomic="true">
-              <span className="text-sm text-red-500 mt-2">message</span>
+              <span className="text-sm text-red-500 mt-2">
+                {state?.error?.description}
+              </span>
             </div>
           </div>
           <div className="mb-4 grid md:grid-cols-3">
-            <input
-              type="checkbox"
-              name="amenities"
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded"
-            />
-            <label className="ms-2 text-sm font-medium text-gray-900 capitalize">
-              Spa
-            </label>
+            {amenities.map((item) => (
+              <div className="flex items-center mb-4" key={item.id}>
+                <input
+                  type="checkbox"
+                  name="amenities"
+                  defaultValue={item.id}
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded"
+                />
+                <label className="ms-2 text-sm font-medium text-gray-900 capitalize">
+                  {item.name}
+                </label>
+              </div>
+            ))}
             <div aria-live="polite" aria-atomic="true">
-              <span className="text-sm text-red-500 mt-2">message</span>
+              <span className="text-sm text-red-500 mt-2">
+                {state?.error?.amenities}
+              </span>
             </div>
           </div>
         </div>
@@ -141,7 +160,9 @@ const CreateForm = () => {
               placeholder="Capacity"
             />
             <div aria-live="polite" aria-atomic="true">
-              <span className="text-sm text-red-500 mt-2">message</span>
+              <span className="text-sm text-red-500 mt-2">
+                {state?.error?.capacity}
+              </span>
             </div>
           </div>
           <div className="mb-4">
@@ -152,14 +173,30 @@ const CreateForm = () => {
               placeholder="Price"
             />
             <div aria-live="polite" aria-atomic="true">
-              <span className="text-sm text-red-500 mt-2">message</span>
+              <span className="text-sm text-red-500 mt-2">
+                {state?.error?.price}
+              </span>
             </div>
           </div>
+          {/* General Message */}
+          {state?.message ? (
+            <div className="mb-4 bg-red-200 p-2">
+              <span className="text-sm text-gray-700 mt-2">
+                {state.message}
+              </span>
+            </div>
+          ) : null}
           <button
             type="submit"
-            className="bg-orange-400 text-400 w-full hover:bg-orange-500 py-2.5 px-6 md:px-10 text-lg font-semibold cursor-pointer"
+            className={clsx(
+              "bg-orange-400 text-400 w-full hover:bg-orange-500 py-2.5 px-6 md:px-10 text-lg font-semibold cursor-pointer",
+              {
+                "opacity-50 cursor-progress": isPending,
+              }
+            )}
+            disabled={isPending}
           >
-            Save
+            {isPending ? "Saving..." : "Save"}
           </button>
         </div>
       </div>
