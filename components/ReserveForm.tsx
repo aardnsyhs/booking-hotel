@@ -7,10 +7,10 @@ const ReserveForm = () => {
   const StartDate = new Date();
   const EndDate = addDays(StartDate, 1);
 
-  const [startDate, setStartDate] = useState(StartDate);
-  const [endDate, setEndDate] = useState(EndDate);
+  const [startDate, setStartDate] = useState<Date | null>(StartDate);
+  const [endDate, setEndDate] = useState<Date | null>(EndDate);
 
-  const handleDateChange = (dates: any) => {
+  const handleDateChange = (dates: [Date | null, Date | null]) => {
     const [start, end] = dates;
     setStartDate(start);
     setEndDate(end);
