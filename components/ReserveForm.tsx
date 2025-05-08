@@ -1,24 +1,32 @@
 "use client";
+import { createReserve } from "@/lib/actions";
+import { RoomDetailProps } from "@/types/room";
+import clsx from "clsx";
 import { addDays } from "date-fns";
-import { useState } from "react";
+import { useActionState, useState } from "react";
 import DatePicker from "react-datepicker";
 
-const ReserveForm = () => {
+const ReserveForm = ({ room }: { room: RoomDetailProps }) => {
   const StartDate = new Date();
   const EndDate = addDays(StartDate, 1);
 
-  const [startDate, setStartDate] = useState<Date | null>(StartDate);
-  const [endDate, setEndDate] = useState<Date | null>(EndDate);
+  const [startDate, setStartDate] = useState(StartDate);
+  const [endDate, setEndDate] = useState(EndDate);
 
-  const handleDateChange = (dates: [Date | null, Date | null]) => {
+  const handleDateChange = (dates: any) => {
     const [start, end] = dates;
     setStartDate(start);
     setEndDate(end);
   };
 
+  const [state, formAction, isPending] = useActionState(
+    createReserve.bind(null, room.id, room.price, startDate, endDate),
+    null
+  );
+
   return (
     <div>
-      <form action="">
+      <form action={formAction}>
         <div className="mb-4">
           <label className="block mb-2 text-sm font-medium text-gray-900">
             Arrival - Departure
@@ -35,7 +43,7 @@ const ReserveForm = () => {
             onChange={handleDateChange}
           />
           <div aria-live="polite" aria-atomic="true">
-            <p className="text-sm text-red-500 mt-2">message</p>
+            <p className="text-sm text-red-500 mt-2">{state?.messageDate}</p>
           </div>
         </div>
         <div className="mb-4">
@@ -49,7 +57,7 @@ const ReserveForm = () => {
             placeholder="Full Name..."
           />
           <div aria-live="polite" aria-atomic="true">
-            <p className="text-sm text-red-500 mt-2">message</p>
+            <p className="text-sm text-red-500 mt-2">{state?.error?.name}</p>
           </div>
         </div>
         <div className="mb-4">
@@ -63,14 +71,20 @@ const ReserveForm = () => {
             placeholder="Phone Number..."
           />
           <div aria-live="polite" aria-atomic="true">
-            <p className="text-sm text-red-500 mt-2">message</p>
+            <p className="text-sm text-red-500 mt-2">{state?.error?.phone}</p>
           </div>
         </div>
         <button
           type="submit"
-          className="px-10 py-3 text-center font-semibold text-white w-full bg-orange-400 rounded-sm cursor-pointer hover:bg-orange-500"
+          className={clsx(
+            "px-10 py-3 text-center font-semibold text-white w-full bg-orange-400 rounded-sm cursor-pointer hover:bg-orange-500",
+            {
+              "opacity-50 cursor-progress": isPending,
+            }
+          )}
+          disabled={isPending}
         >
-          Reserve
+          {isPending ? "Loading..." : "Reserve"}
         </button>
       </form>
     </div>

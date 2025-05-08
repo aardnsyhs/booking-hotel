@@ -18,3 +18,8 @@ export const RoomSchema = object({
   price: coerce.number().gt(0, "Price must be greater than 0"),
   amenities: array(string()).nonempty(),
 });
+
+export const ReserveSchema = object({
+  name: string().min(1, "Name at least 1 characters"),
+  phone: string().min(11, "Phone Number at least 11 characters"),
+});
