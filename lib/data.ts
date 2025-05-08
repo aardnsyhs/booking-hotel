@@ -37,3 +37,25 @@ export const getRoomById = async (roomId: string) => {
     console.error(err);
   }
 };
+
+export const getRoomDetailById = async (roomId: string) => {
+  try {
+    const result = await prisma.room.findUnique({
+      where: { id: roomId },
+      include: {
+        RoomAmenities: {
+          include: {
+            amenities: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    return result;
+  } catch (err) {
+    console.error(err);
+  }
+};
