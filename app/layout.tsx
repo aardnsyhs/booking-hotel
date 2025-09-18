@@ -12,7 +12,7 @@ const raleway = Raleway({
 });
 
 export const metadata: Metadata = {
-  title: "Home",
+  title: "Home - NexaBook",
   description: "Online Booking Hotel",
 };
 

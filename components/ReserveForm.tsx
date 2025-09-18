@@ -13,10 +13,14 @@ const ReserveForm = ({ room }: { room: RoomDetailProps }) => {
   const [startDate, setStartDate] = useState(StartDate);
   const [endDate, setEndDate] = useState(EndDate);
 
-  const handleDateChange = (dates: any) => {
+  const handleDateChange = (dates: [Date | null, Date | null]) => {
     const [start, end] = dates;
-    setStartDate(start);
-    setEndDate(end);
+    if (start) {
+      setStartDate(start);
+    }
+    if (end) {
+      setEndDate(end);
+    }
   };
 
   const [state, formAction, isPending] = useActionState(
