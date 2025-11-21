@@ -78,79 +78,92 @@ const ReservationsPage = async () => {
           </div>
         ) : (
           <div className="grid gap-7 md:grid-cols-3">
-            {reservations.map((reservation) => (
-              <div
-                key={reservation.id}
-                className="bg-white shadow-lg rounded-sm transition duration-100 hover:shadow-sm"
-              >
-                <div className="h-[260px] w-auto rounded-t-sm relative">
-                  {reservation.room.image && (
-                    <Image
-                      src={reservation.room.image}
-                      alt={reservation.room.name}
-                      fill
-                      className="w-full h-full object-cover rounded-t-sm"
-                    />
-                  )}
-                </div>
-                <div className="p-8">
-                  <h4 className="text-2xl font-medium mb-7">
-                    <Link
-                      href={`/checkout/${reservation.id}`}
-                      className="hover:text-gray-800 transition duration-150"
-                    >
-                      {reservation.room.name}
-                    </Link>
-                  </h4>
-                  <h4 className="text-2xl mb-7">
-                    <span className="font-semibold text-gray-600">
-                      {formatCurrency(reservation.price)}
-                    </span>
-                    <span className="text-gray-400 text-sm">Total</span>
-                  </h4>
-                  <div className="space-y-2 mb-4 text-sm text-gray-600">
-                    <p>
-                      <span className="font-semibold text-gray-900">
-                        Check-in:
-                      </span>{" "}
-                      {reservation.checkIn.toLocaleDateString("id-ID", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </p>
-                    <p>
-                      <span className="font-semibold text-gray-900">
-                        Check-out:
-                      </span>{" "}
-                      {reservation.checkOut.toLocaleDateString("id-ID", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </p>
+            {reservations.map((reservation) => {
+              const checkInDate = new Date(reservation.checkIn);
+              const today = new Date();
+              today.setHours(0, 0, 0, 0);
+              const isExpired = checkInDate < today;
+              const paymentStatus = reservation.Payment[0]?.status;
+
+              return (
+                <div
+                  key={reservation.id}
+                  className="bg-white shadow-lg rounded-sm transition duration-100 hover:shadow-sm"
+                >
+                  <div className="h-[260px] w-auto rounded-t-sm relative">
+                    {reservation.room.image && (
+                      <Image
+                        src={reservation.room.image}
+                        alt={reservation.room.name}
+                        fill
+                        className="w-full h-full object-cover rounded-t-sm"
+                      />
+                    )}
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                        reservation.Payment[0]?.status === "paid"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-yellow-100 text-yellow-800"
-                      }`}
-                    >
-                      {reservation.Payment[0]?.status?.toUpperCase() ||
-                        "PENDING"}
-                    </span>
-                    <Link
-                      href={`/checkout/${reservation.id}`}
-                      className="px-6 py-2.5 md:px-10 md:py-3 font-semibold text-white bg-orange-400 rounded-sm hover:bg-orange-500 transition duration-150"
-                    >
-                      View Details
-                    </Link>
+                  <div className="p-8">
+                    <h4 className="text-2xl font-medium mb-7">
+                      <Link
+                        href={`/checkout/${reservation.id}`}
+                        className="hover:text-gray-800 transition duration-150"
+                      >
+                        {reservation.room.name}
+                      </Link>
+                    </h4>
+                    <h4 className="text-2xl mb-7">
+                      <span className="font-semibold text-gray-600">
+                        {formatCurrency(reservation.price)}
+                      </span>
+                      <span className="text-gray-400 text-sm">Total</span>
+                    </h4>
+                    <div className="space-y-2 mb-4 text-sm text-gray-600">
+                      <p>
+                        <span className="font-semibold text-gray-900">
+                          Check-in:
+                        </span>{" "}
+                        {reservation.checkIn.toLocaleDateString("id-ID", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                      </p>
+                      <p>
+                        <span className="font-semibold text-gray-900">
+                          Check-out:
+                        </span>{" "}
+                        {reservation.checkOut.toLocaleDateString("id-ID", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                      </p>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                          isExpired && paymentStatus !== "paid"
+                            ? "bg-gray-100 text-gray-800"
+                            : paymentStatus === "paid"
+                            ? "bg-green-100 text-green-800"
+                            : paymentStatus === "failure"
+                            ? "bg-red-100 text-red-800"
+                            : "bg-yellow-100 text-yellow-800"
+                        }`}
+                      >
+                        {isExpired && paymentStatus !== "paid"
+                          ? "EXPIRED"
+                          : paymentStatus?.toUpperCase() || "UNPAID"}
+                      </span>
+                      <Link
+                        href={`/checkout/${reservation.id}`}
+                        className="px-6 py-2.5 md:px-10 md:py-3 font-semibold text-white bg-orange-400 rounded-sm hover:bg-orange-500 transition duration-150"
+                      >
+                        View Details
+                      </Link>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
