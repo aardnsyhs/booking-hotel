@@ -8,24 +8,49 @@ const snap = new midtransClient.Snap({
   clientKey: process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY!,
 });
 
+export const GET = async () => {
+  return NextResponse.json({
+    message: "Payment API endpoint. Use POST method with reservation data.",
+    method: "POST",
+    requiredFields: ["id", "user", "Payment"],
+  });
+};
+
 export const POST = async (request: Request) => {
-  const reservation: reservationProps = await request.json();
+  try {
+    const reservation: reservationProps = await request.json();
 
-  const parameter = {
-    transaction_details: {
-      order_id: reservation.id,
-      gross_amount: reservation.Payment?.[0]?.amount || 0,
-    },
-    credit_card: {
-      secure: true,
-    },
-    customer_details: {
-      first_name: reservation.user.name,
-      email: reservation.user.email,
-    },
-  };
+    // Create unique order_id by appending timestamp
+    const uniqueOrderId = `${reservation.id}-${Date.now()}`;
 
-  const token = await snap.createTransactionToken(parameter);
+    const parameter = {
+      transaction_details: {
+        order_id: uniqueOrderId,
+        gross_amount: reservation.Payment?.[0]?.amount || 0,
+      },
+      credit_card: {
+        secure: true,
+      },
+      customer_details: {
+        first_name: reservation.user.name,
+        email: reservation.user.email,
+      },
+      callbacks: {
+        finish: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/${reservation.id}`,
+      },
+    };
 
-  return NextResponse.json({ token });
+    const token = await snap.createTransactionToken(parameter);
+
+    return NextResponse.json({ token });
+  } catch (error) {
+    console.error("Payment API Error:", error);
+    return NextResponse.json(
+      {
+        error: "Failed to create payment token",
+        message: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 }
+    );
+  }
 };

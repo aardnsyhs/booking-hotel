@@ -7,24 +7,26 @@ import { useActionState, useState } from "react";
 import DatePicker from "react-datepicker";
 
 const ReserveForm = ({ room }: { room: RoomDetailProps }) => {
-  const StartDate = new Date();
-  const EndDate = addDays(StartDate, 1);
+  const today = new Date();
+  const tomorrow = addDays(today, 1);
 
-  const [startDate, setStartDate] = useState(StartDate);
-  const [endDate, setEndDate] = useState(EndDate);
+  const [startDate, setStartDate] = useState<Date | null>(today);
+  const [endDate, setEndDate] = useState<Date | null>(tomorrow);
 
   const handleDateChange = (dates: [Date | null, Date | null]) => {
     const [start, end] = dates;
-    if (start) {
-      setStartDate(start);
-    }
-    if (end) {
-      setEndDate(end);
-    }
+    setStartDate(start);
+    setEndDate(end);
   };
 
   const [state, formAction, isPending] = useActionState(
-    createReserve.bind(null, room.id, room.price, startDate, endDate),
+    createReserve.bind(
+      null,
+      room.id,
+      room.price,
+      startDate || today,
+      endDate || tomorrow
+    ),
     null
   );
 
@@ -39,12 +41,13 @@ const ReserveForm = ({ room }: { room: RoomDetailProps }) => {
             selected={startDate}
             startDate={startDate}
             endDate={endDate}
-            minDate={StartDate}
+            minDate={today}
             selectsRange={true}
-            dateFormat={"dd-MM-YYYY"}
+            dateFormat="dd-MM-yyyy"
             wrapperClassName="w-full"
             className="py-2 px-4 rounded-md border border-gray-300 w-full"
             onChange={handleDateChange}
+            monthsShown={1}
           />
           <div aria-live="polite" aria-atomic="true">
             <p className="text-sm text-red-500 mt-2">{state?.messageDate}</p>

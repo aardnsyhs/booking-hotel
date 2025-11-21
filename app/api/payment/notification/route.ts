@@ -5,7 +5,9 @@ import { NextResponse } from "next/server";
 
 export const POST = async (request: Request) => {
   const data: PaymentProps = await request.json();
-  const reservationId = data.order_id;
+  const orderId = data.order_id;
+  // Extract reservationId from order_id format: {reservationId}-{timestamp}
+  const reservationId = orderId.split("-").slice(0, -1).join("-");
 
   let responseData = null;
 
@@ -19,13 +21,13 @@ export const POST = async (request: Request) => {
   const hash = crypto
     .createHash("sha512")
     .update(
-      `${reservationId}${statusCode}${grossAmount}${process.env.MIDTRANS_SERKER_KEY}`
+      `${orderId}${statusCode}${grossAmount}${process.env.MIDTRANS_SERVER_KEY}`
     )
     .digest("hex");
 
   if (signatureKey !== hash) {
     return NextResponse.json(
-      { error: "Missing signature key" },
+      { error: "Invalid signature key" },
       { status: 400 }
     );
   }

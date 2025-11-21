@@ -103,7 +103,19 @@ const CheckoutDetail = async ({ reservationId }: { reservationId: string }) => {
             <tr>
               <td className="py-2">Status</td>
               <td className="py-2 text-right truncate">
-                {reservation.Payment[0]?.status || null}
+                <span
+                  className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                    reservation.Payment[0]?.status === "paid"
+                      ? "bg-green-100 text-green-800"
+                      : reservation.Payment[0]?.status === "pending"
+                      ? "bg-yellow-100 text-yellow-800"
+                      : reservation.Payment[0]?.status === "failure"
+                      ? "bg-red-100 text-red-800"
+                      : "bg-gray-100 text-gray-800"
+                  }`}
+                >
+                  {reservation.Payment[0]?.status?.toUpperCase() || "UNPAID"}
+                </span>
               </td>
             </tr>
           </tbody>
