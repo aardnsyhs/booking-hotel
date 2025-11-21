@@ -2,6 +2,7 @@ import CheckoutDetail from "@/components/CheckoutDetail";
 import { Metadata } from "next";
 import Script from "next/script";
 import { Suspense } from "react";
+import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
   title: "Reservation Summary",
@@ -9,10 +10,40 @@ export const metadata: Metadata = {
 
 const CheckoutPage = async ({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) => {
   const reservationId = (await params).id;
+  const search = await searchParams;
+  const transactionStatus = search.transaction_status as string | undefined;
+
+  // Update payment status if transaction_status is present in URL
+  if (transactionStatus) {
+    let status = "unpaid";
+
+    if (transactionStatus === "settlement" || transactionStatus === "capture") {
+      status = "paid";
+    } else if (transactionStatus === "pending") {
+      status = "pending";
+    } else if (
+      transactionStatus === "cancel" ||
+      transactionStatus === "deny" ||
+      transactionStatus === "expire"
+    ) {
+      status = "failure";
+    }
+
+    await prisma.payment.update({
+      where: {
+        reservationId,
+      },
+      data: {
+        status,
+      },
+    });
+  }
 
   return (
     <div className="max-w-screen-xl px-4 mx-auto py-20 mt-12">
