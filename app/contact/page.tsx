@@ -16,7 +16,7 @@ const ContactPage = () => {
     <div>
       <HeaderSection
         title="Contact Us"
-        subTitle="Lorem ipsum dolor sit amet."
+        subTitle="Get in touch with us for any inquiries or assistance you may need."
       />
       <div className="max-w-screen-xl mx-auto py-20 px-4">
         <div className="grid md:grid-cols-2 gap-8">

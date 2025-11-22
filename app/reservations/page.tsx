@@ -49,7 +49,7 @@ const ReservationsPage = async () => {
     <div>
       <HeaderSection
         title="My Reservations"
-        subTitle="Lorem ipsum dolor sit amet."
+        subTitle="View and manage all your hotel bookings in one place."
       />
       <div className="max-w-screen-xl py-20 px-4 mx-auto">
         {reservations.length === 0 ? (

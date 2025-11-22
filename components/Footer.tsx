@@ -11,8 +11,8 @@ const Footer = () => {
               <Image src="/img/logo.png" alt="logo" width={128} height={49} />
             </Link>
             <p className="text-gray-400">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam
-              tempore, ratione minus quas similique accusantium.
+              Your trusted partner for comfortable accommodations and seamless
+              booking experiences. Book with confidence and enjoy your stay.
             </p>
           </div>
           <div>
@@ -58,7 +58,8 @@ const Footer = () => {
               Newsletter
             </h4>
             <p className="text-gray-400">
-              Lorem ipsum dolor sit amet, consectetur adipisicing.
+              Subscribe to receive exclusive deals and updates on our latest
+              offers.
             </p>
             <form action="" className="mt-5">
               <div className="mb-5">

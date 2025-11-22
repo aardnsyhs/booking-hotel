@@ -11,7 +11,10 @@ export const metadata: Metadata = {
 const Page = () => {
   return (
     <div>
-      <HeaderSection title="About Us" subTitle="Lorem ipsum dolor sit amet." />
+      <HeaderSection
+        title="About Us"
+        subTitle="Learn more about our commitment to exceptional hospitality."
+      />
       <div className="max-w-screen-xl mx-auto py-20 px-4">
         <div className="grid md:grid-cols-2 gap-8">
           <Image
@@ -25,9 +28,10 @@ const Page = () => {
               Who We Are
             </h1>
             <p className="text-gray-700 py-5">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod
-              aliquam blanditiis iusto fuga culpa veniam eligendi cumque? Illo,
-              omnis neque.
+              We are a premier hotel booking platform dedicated to providing
+              seamless reservation experiences. Our commitment is to connect
+              travelers with comfortable accommodations that meet their needs
+              and exceed their expectations.
             </p>
             <ul className="list-item space-y-6 pt-8">
               <li className="flex gap-5">
@@ -37,8 +41,9 @@ const Page = () => {
                 <div className="flex-1">
                   <h4 className="text-lg font-semibold mb-1">Vision :</h4>
                   <p className="text-gray-600">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Commodi harum repellat voluptate reiciendis qui ipsam?
+                    To become the most trusted hotel booking platform,
+                    delivering exceptional experiences and making every stay
+                    memorable for our guests worldwide.
                   </p>
                 </div>
               </li>
@@ -49,9 +54,9 @@ const Page = () => {
                 <div className="flex-1">
                   <h4 className="text-lg font-semibold mb-1">Mission :</h4>
                   <p className="text-gray-600">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Illo laboriosam ipsum, adipisci libero dicta minus
-                    temporibus consequuntur tempora nostrum dolor!
+                    To provide easy, secure, and reliable hotel booking services
+                    with competitive rates, excellent customer support, and a
+                    wide selection of quality accommodations for every traveler.
                   </p>
                 </div>
               </li>
