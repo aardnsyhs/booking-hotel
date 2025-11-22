@@ -11,27 +11,27 @@ import {
 } from "@react-email/components";
 
 interface BookingCancellationEmailProps {
-  customerName: string;
-  reservationId: string;
-  roomName: string;
-  checkIn: string;
-  checkOut: string;
-  totalAmount: string;
-  refundAmount: string;
-  cancellationReason: string;
-  refundStatus: string;
+  customerName?: string;
+  reservationId?: string;
+  roomName?: string;
+  checkIn?: string;
+  checkOut?: string;
+  totalAmount?: string;
+  refundAmount?: string;
+  cancellationReason?: string;
+  refundStatus?: string;
 }
 
 export const BookingCancellationEmail = ({
-  customerName,
-  reservationId,
-  roomName,
-  checkIn,
-  checkOut,
-  totalAmount,
-  refundAmount,
-  cancellationReason,
-  refundStatus,
+  customerName = "Guest",
+  reservationId = "RES-XXXXX",
+  roomName = "Deluxe Room",
+  checkIn = "January 1, 2024",
+  checkOut = "January 3, 2024",
+  totalAmount = "Rp 1,000,000",
+  refundAmount = "Rp 1,000,000",
+  cancellationReason = "Customer request",
+  refundStatus = "pending",
 }: BookingCancellationEmailProps) => {
   return (
     <Html>
@@ -42,13 +42,11 @@ export const BookingCancellationEmail = ({
           <Section style={cancelBanner}>
             <Heading style={cancelHeading}>✕ Booking Cancelled</Heading>
           </Section>
-
           <Text style={text}>Dear {customerName},</Text>
           <Text style={text}>
             Your booking has been cancelled as requested. We&apos;re sorry to
             see you go, but we hope to serve you again in the future.
           </Text>
-
           <Section style={bookingDetails}>
             <Heading style={h2}>Cancelled Reservation Details</Heading>
             <Hr style={hr} />
@@ -72,7 +70,6 @@ export const BookingCancellationEmail = ({
               <strong>Original Amount:</strong> {totalAmount}
             </Text>
           </Section>
-
           <Section style={refundBox}>
             <Heading style={h2}>Refund Information</Heading>
             <Hr style={hr} />
@@ -80,7 +77,8 @@ export const BookingCancellationEmail = ({
               <strong>Refund Amount:</strong> {refundAmount}
             </Text>
             <Text style={detailRow}>
-              <strong>Refund Status:</strong> {refundStatus.toUpperCase()}
+              <strong>Refund Status:</strong>{" "}
+              {refundStatus?.toUpperCase() || "PENDING"}
             </Text>
             <Hr style={hr} />
             <Text style={infoText}>
@@ -94,7 +92,6 @@ export const BookingCancellationEmail = ({
                 "Unfortunately, your refund request was not eligible based on our cancellation policy."}
             </Text>
           </Section>
-
           <Section style={policyBox}>
             <Text style={policyText}>
               <strong>Cancellation Policy:</strong>
@@ -106,7 +103,6 @@ export const BookingCancellationEmail = ({
               refund
             </Text>
           </Section>
-
           <Text style={footer}>
             If you have any questions about your cancellation or refund, please
             don&apos;t hesitate to contact us.
@@ -164,6 +160,8 @@ const text = {
   lineHeight: "26px",
   padding: "0 40px",
   marginTop: "20px",
+  wordBreak: "break-word" as const,
+  overflowWrap: "break-word" as const,
 };
 
 const bookingDetails = {
@@ -171,6 +169,8 @@ const bookingDetails = {
   borderRadius: "8px",
   margin: "20px 40px",
   padding: "20px",
+  maxWidth: "520px",
+  boxSizing: "border-box" as const,
 };
 
 const detailRow = {
@@ -178,6 +178,8 @@ const detailRow = {
   fontSize: "14px",
   lineHeight: "24px",
   margin: "8px 0",
+  wordBreak: "break-word" as const,
+  overflowWrap: "break-word" as const,
 };
 
 const refundBox = {
@@ -185,6 +187,8 @@ const refundBox = {
   borderRadius: "8px",
   margin: "20px 40px",
   padding: "20px",
+  maxWidth: "520px",
+  boxSizing: "border-box" as const,
 };
 
 const refundAmountStyle = {
@@ -192,6 +196,8 @@ const refundAmountStyle = {
   fontSize: "18px",
   fontWeight: "bold" as const,
   margin: "8px 0",
+  wordBreak: "break-word" as const,
+  overflowWrap: "break-word" as const,
 };
 
 const hr = {
@@ -204,6 +210,8 @@ const policyBox = {
   borderRadius: "8px",
   margin: "20px 40px",
   padding: "20px",
+  maxWidth: "520px",
+  boxSizing: "border-box" as const,
 };
 
 const policyText = {
@@ -211,6 +219,8 @@ const policyText = {
   fontSize: "14px",
   lineHeight: "22px",
   margin: "0",
+  wordBreak: "break-word" as const,
+  overflowWrap: "break-word" as const,
 };
 
 const infoText = {
@@ -218,6 +228,8 @@ const infoText = {
   fontSize: "14px",
   lineHeight: "22px",
   margin: "8px 0",
+  wordBreak: "break-word" as const,
+  overflowWrap: "break-word" as const,
 };
 
 const footer = {
