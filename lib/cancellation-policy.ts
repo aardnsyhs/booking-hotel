@@ -6,10 +6,7 @@ export interface CancellationPolicy {
   reason: string;
 }
 
-export function getCancellationPolicy(
-  checkInDate: Date,
-  totalAmount: number
-): CancellationPolicy {
+export function getCancellationPolicy(checkInDate: Date): CancellationPolicy {
   const now = new Date();
   const hoursUntilCheckIn = differenceInHours(checkInDate, now);
 
