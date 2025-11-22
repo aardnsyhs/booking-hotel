@@ -6,16 +6,6 @@ export interface CancellationPolicy {
   reason: string;
 }
 
-/**
- * Calculate cancellation policy based on check-in date
- *
- * Policy:
- * - More than 7 days before check-in: 100% refund
- * - 3-7 days before check-in: 50% refund
- * - 1-3 days before check-in: 25% refund
- * - Less than 24 hours before check-in: No refund
- * - After check-in: Cannot cancel
- */
 export function getCancellationPolicy(
   checkInDate: Date,
   totalAmount: number
@@ -23,7 +13,6 @@ export function getCancellationPolicy(
   const now = new Date();
   const hoursUntilCheckIn = differenceInHours(checkInDate, now);
 
-  // Already checked in or past check-in date
   if (hoursUntilCheckIn <= 0) {
     return {
       canCancel: false,
@@ -32,7 +21,6 @@ export function getCancellationPolicy(
     };
   }
 
-  // Less than 24 hours before check-in
   if (hoursUntilCheckIn < 24) {
     return {
       canCancel: false,
@@ -41,7 +29,6 @@ export function getCancellationPolicy(
     };
   }
 
-  // 1-3 days before check-in (24-72 hours)
   if (hoursUntilCheckIn < 72) {
     return {
       canCancel: true,
@@ -50,7 +37,6 @@ export function getCancellationPolicy(
     };
   }
 
-  // 3-7 days before check-in (72-168 hours)
   if (hoursUntilCheckIn < 168) {
     return {
       canCancel: true,
@@ -59,7 +45,6 @@ export function getCancellationPolicy(
     };
   }
 
-  // More than 7 days before check-in
   return {
     canCancel: true,
     refundPercentage: 100,

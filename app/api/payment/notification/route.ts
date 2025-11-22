@@ -6,7 +6,6 @@ import { NextResponse } from "next/server";
 export const POST = async (request: Request) => {
   const data: PaymentProps = await request.json();
   const orderId = data.order_id;
-  // Extract reservationId from order_id format: {reservationId}-{timestamp}
   const reservationId = orderId.split("-").slice(0, -1).join("-");
 
   let responseData = null;
@@ -73,7 +72,6 @@ export const POST = async (request: Request) => {
       },
     });
 
-    // Send payment success email
     const { sendPaymentSuccessEmail } = await import("@/lib/email");
     await sendPaymentSuccessEmail({
       customerName: transaction.reservation.user.name || "Guest",

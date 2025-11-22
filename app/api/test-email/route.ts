@@ -3,7 +3,6 @@ import { sendBookingConfirmationEmail } from "@/lib/email";
 
 export async function GET() {
   try {
-    // Check if API key exists
     if (!process.env.RESEND_API_KEY) {
       return NextResponse.json(
         {
@@ -16,7 +15,6 @@ export async function GET() {
       );
     }
 
-    // Check if API key format is valid
     if (!process.env.RESEND_API_KEY.startsWith("re_")) {
       return NextResponse.json(
         {
@@ -28,14 +26,13 @@ export async function GET() {
       );
     }
 
-    // Send test email
     const result = await sendBookingConfirmationEmail({
       customerName: "Test User",
-      customerEmail: "delivered@resend.dev", // Resend test email
+      customerEmail: "delivered@resend.dev",
       reservationId: "TEST-123456",
       roomName: "Deluxe Room",
       checkIn: new Date(),
-      checkOut: new Date(Date.now() + 86400000), // Tomorrow
+      checkOut: new Date(Date.now() + 86400000),
       totalAmount: 1000000,
     });
 

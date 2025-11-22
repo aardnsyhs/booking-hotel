@@ -54,7 +54,6 @@ export default function CancelBookingButton({
         setSuccessData(refundData);
         setShowModal(false);
 
-        // Ensure modal shows after form modal closes
         setTimeout(() => {
           setShowSuccessModal(true);
         }, 150);

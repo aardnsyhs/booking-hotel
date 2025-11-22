@@ -20,7 +20,6 @@ export const POST = async (request: Request) => {
   try {
     const reservation: reservationProps = await request.json();
 
-    // Create unique order_id by appending timestamp
     const uniqueOrderId = `${reservation.id}-${Date.now()}`;
 
     const parameter = {

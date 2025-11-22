@@ -19,7 +19,6 @@ const CheckoutPage = async ({
   const search = await searchParams;
   const transactionStatus = search.transaction_status as string | undefined;
 
-  // Update payment status if transaction_status is present in URL
   if (transactionStatus) {
     let status = "unpaid";
 
@@ -61,7 +60,6 @@ const CheckoutPage = async ({
       },
     });
 
-    // Send payment success email if status is paid
     if (status === "paid") {
       const { sendPaymentSuccessEmail } = await import("@/lib/email");
       await sendPaymentSuccessEmail({

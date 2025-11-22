@@ -31,7 +31,6 @@ export async function sendBookingConfirmationEmail(data: BookingEmailData) {
 
     const nights = differenceInCalendarDays(data.checkOut, data.checkIn);
 
-    // In development, use test email if not sending to verified address
     const isDevelopment = process.env.NODE_ENV === "development";
     const recipientEmail = isDevelopment
       ? "delivered@resend.dev"
@@ -71,7 +70,6 @@ export async function sendPaymentSuccessEmail(data: PaymentEmailData) {
       };
     }
 
-    // In development, use test email if not sending to verified address
     const isDevelopment = process.env.NODE_ENV === "development";
     const recipientEmail = isDevelopment
       ? "delivered@resend.dev"

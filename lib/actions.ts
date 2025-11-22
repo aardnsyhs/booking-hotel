@@ -84,7 +84,6 @@ export const saveRoom = async (
   redirect("/admin/room");
 };
 
-// Delete Room
 export const deleteRoom = async (id: string, image: string) => {
   try {
     await del(image);
@@ -98,7 +97,6 @@ export const deleteRoom = async (id: string, image: string) => {
   revalidatePath("/admin/room");
 };
 
-// Update Room
 export const updateRoom = async (
   image: string,
   roomId: string,
@@ -222,7 +220,6 @@ export const createReserve = async (
       });
       reservationId = reservation.id;
 
-      // Send booking confirmation email
       const { sendBookingConfirmationEmail } = await import("./email");
       await sendBookingConfirmationEmail({
         customerName: name,
@@ -270,7 +267,6 @@ export const requestCancellation = async (
       return { success: false, error: "Reservation already cancelled" };
     }
 
-    // Check if payment is paid
     const payment = reservation.Payment[0];
     if (!payment || payment.status !== "paid") {
       return {
@@ -279,7 +275,6 @@ export const requestCancellation = async (
       };
     }
 
-    // Calculate refund based on cancellation policy
     const { getCancellationPolicy, calculateRefundAmount } = await import(
       "./cancellation-policy"
     );
@@ -294,7 +289,6 @@ export const requestCancellation = async (
       policy.refundPercentage
     );
 
-    // Update reservation with cancellation request
     await prisma.reservation.update({
       where: { id: reservationId },
       data: {
@@ -305,9 +299,6 @@ export const requestCancellation = async (
         refundStatus: "pending",
       },
     });
-
-    // Don't revalidate here - let the client handle refresh after modal closes
-    // This prevents the component from unmounting before modal is shown
 
     return {
       success: true,
