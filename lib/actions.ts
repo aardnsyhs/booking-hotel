@@ -289,7 +289,7 @@ export const requestCancellation = async (
       policy.refundPercentage
     );
 
-    await prisma.reservation.update({
+    const updatedReservation = await prisma.reservation.update({
       where: { id: reservationId },
       data: {
         status: "cancelled",
@@ -298,6 +298,34 @@ export const requestCancellation = async (
         refundAmount,
         refundStatus: "pending",
       },
+      include: {
+        Room: {
+          select: {
+            name: true,
+          },
+        },
+        User: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    // Send cancellation email
+    const { sendBookingCancellationEmail } = await import("./email");
+    await sendBookingCancellationEmail({
+      customerName: updatedReservation.User.name || "Guest",
+      customerEmail: updatedReservation.User.email,
+      reservationId: updatedReservation.id,
+      roomName: updatedReservation.Room.name,
+      checkIn: updatedReservation.checkIn,
+      checkOut: updatedReservation.checkOut,
+      totalAmount: payment.amount,
+      refundAmount,
+      cancellationReason: reason,
+      refundStatus: "pending",
     });
 
     return {

@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import { BookingConfirmationEmail } from "@/emails/booking-confirmation";
 import { PaymentSuccessEmail } from "@/emails/payment-success";
+import { BookingCancellationEmail } from "@/emails/booking-cancellation";
 import { formatCurrency, formatDate } from "./utils";
 import { differenceInCalendarDays } from "date-fns";
 
@@ -18,6 +19,12 @@ interface BookingEmailData {
 
 interface PaymentEmailData extends BookingEmailData {
   paymentMethod: string;
+}
+
+interface CancellationEmailData extends BookingEmailData {
+  refundAmount: number;
+  cancellationReason: string;
+  refundStatus: string;
 }
 
 export async function sendBookingConfirmationEmail(data: BookingEmailData) {
@@ -87,6 +94,49 @@ export async function sendPaymentSuccessEmail(data: PaymentEmailData) {
         checkOut: formatDate(data.checkOut.toISOString()),
         totalAmount: formatCurrency(data.totalAmount),
         paymentMethod: data.paymentMethod || "Online Payment",
+      }),
+    });
+
+    if (error) {
+      return { success: false, error };
+    }
+
+    return { success: true, data: emailData };
+  } catch (error) {
+    return { success: false, error };
+  }
+}
+
+export async function sendBookingCancellationEmail(
+  data: CancellationEmailData
+) {
+  try {
+    if (!process.env.RESEND_API_KEY) {
+      return {
+        success: false,
+        error: "RESEND_API_KEY not configured",
+      };
+    }
+
+    const isDevelopment = process.env.NODE_ENV === "development";
+    const recipientEmail = isDevelopment
+      ? "delivered@resend.dev"
+      : data.customerEmail;
+
+    const { data: emailData, error } = await resend.emails.send({
+      from: "Hotel Booking <onboarding@resend.dev>",
+      to: [recipientEmail],
+      subject: `Booking Cancelled - ${data.reservationId}`,
+      react: BookingCancellationEmail({
+        customerName: data.customerName,
+        reservationId: data.reservationId,
+        roomName: data.roomName,
+        checkIn: formatDate(data.checkIn.toISOString()),
+        checkOut: formatDate(data.checkOut.toISOString()),
+        totalAmount: formatCurrency(data.totalAmount),
+        refundAmount: formatCurrency(data.refundAmount),
+        cancellationReason: data.cancellationReason,
+        refundStatus: data.refundStatus,
       }),
     });
 
