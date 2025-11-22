@@ -25,8 +25,8 @@ const CheckoutDetail = async ({ reservationId }: { reservationId: string }) => {
         <div className="flex flex-col mb-3 items-start bg-white border border-gray-200 rounded-sm md:flex-row md:w-full">
           <div className="aspect-video relative">
             <Image
-              src={reservation.room.image}
-              alt={reservation.room.name}
+              src={reservation.Room.image}
+              alt={reservation.Room.name}
               width={500}
               height={300}
               className="object-cover w-full rounded-t-sm aspect-video md:rounded-none md:rounded-s-sm"
@@ -34,7 +34,7 @@ const CheckoutDetail = async ({ reservationId }: { reservationId: string }) => {
           </div>
           <div className="flex flex-col justify-between p-4 leading-normal w-full">
             <h5 className="mb-1 text-4xl font-bold tracking-tight text-gray-900">
-              {reservation.room.name}
+              {reservation.Room.name}
             </h5>
             <div className="flex items-center gap-1 text-2xl text-gray-500">
               <div className="flex items-center justify-center gap-1">
@@ -50,18 +50,18 @@ const CheckoutDetail = async ({ reservationId }: { reservationId: string }) => {
           <PaymentButton reservation={reservation} />
         )}
         {reservation.status !== "cancelled" &&
-          reservation.Payment[0]?.status === "paid" && (
+          reservation.Payment?.status === "paid" && (
             <>
               {(() => {
                 const policy = getCancellationPolicy(
                   reservation.checkIn,
-                  reservation.Payment[0].amount
+                  reservation.Payment.amount
                 );
                 return (
                   <CancelBookingButton
                     reservationId={reservation.id}
                     checkInDate={reservation.checkIn}
-                    totalAmount={reservation.Payment[0].amount}
+                    totalAmount={reservation.Payment.amount}
                     canCancel={policy.canCancel}
                     cancelReason={policy.reason}
                   />
@@ -98,19 +98,19 @@ const CheckoutDetail = async ({ reservationId }: { reservationId: string }) => {
             <tr>
               <td className="py-2">Name</td>
               <td className="py-2 text-right truncate">
-                {reservation.user.name}
+                {reservation.User.name}
               </td>
             </tr>
             <tr>
               <td className="py-2">Email</td>
               <td className="py-2 text-right truncate">
-                {reservation.user.email}
+                {reservation.User.email}
               </td>
             </tr>
             <tr>
               <td className="py-2">Phone</td>
               <td className="py-2 text-right truncate">
-                {reservation.user.phone}
+                {reservation.User.phone}
               </td>
             </tr>
             <tr>
@@ -136,9 +136,7 @@ const CheckoutDetail = async ({ reservationId }: { reservationId: string }) => {
             <tr>
               <td className="py-2">Amount in Rupiah</td>
               <td className="py-2 text-right truncate">
-                <span>
-                  {formatCurrency(reservation.Payment[0]?.amount || 0)}
-                </span>
+                <span>{formatCurrency(reservation.Payment?.amount || 0)}</span>
               </td>
             </tr>
             <tr>
@@ -146,16 +144,16 @@ const CheckoutDetail = async ({ reservationId }: { reservationId: string }) => {
               <td className="py-2 text-right truncate">
                 <span
                   className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                    reservation.Payment[0]?.status === "paid"
+                    reservation.Payment?.status === "paid"
                       ? "bg-green-100 text-green-800"
-                      : reservation.Payment[0]?.status === "pending"
+                      : reservation.Payment?.status === "pending"
                         ? "bg-yellow-100 text-yellow-800"
-                        : reservation.Payment[0]?.status === "failure"
+                        : reservation.Payment?.status === "failure"
                           ? "bg-red-100 text-red-800"
                           : "bg-gray-100 text-gray-800"
                   }`}
                 >
-                  {reservation.Payment[0]?.status?.toUpperCase() || "UNPAID"}
+                  {reservation.Payment?.status?.toUpperCase() || "UNPAID"}
                 </span>
               </td>
             </tr>

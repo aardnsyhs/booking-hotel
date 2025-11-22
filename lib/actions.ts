@@ -211,7 +211,7 @@ export const createReserve = async (
           },
         },
         include: {
-          room: {
+          Room: {
             select: {
               name: true,
             },
@@ -225,7 +225,7 @@ export const createReserve = async (
         customerName: name,
         customerEmail: session.user.email as string,
         reservationId: reservation.id,
-        roomName: reservation.room.name,
+        roomName: reservation.Room.name,
         checkIn: startDate,
         checkOut: endDate,
         totalAmount: total,
@@ -267,7 +267,7 @@ export const requestCancellation = async (
       return { success: false, error: "Reservation already cancelled" };
     }
 
-    const payment = reservation.Payment[0];
+    const payment = reservation.Payment;
     if (!payment || payment.status !== "paid") {
       return {
         success: false,

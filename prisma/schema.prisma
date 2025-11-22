@@ -21,51 +21,51 @@ model Account {
   id_token          String?
   session_state     String?
   createdAt         DateTime @default(now())
-  updatedAt         DateTime
+  updatedAt         DateTime @updatedAt
   User              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
 }
 
 model Amenities {
-  id            String          @id
+  id            String          @id @default(cuid())
   name          String
   createdAt     DateTime        @default(now())
-  updatedAt     DateTime
+  updatedAt     DateTime        @updatedAt
   RoomAmenities RoomAmenities[]
 }
 
 model Contact {
-  id        String   @id
+  id        String   @id @default(cuid())
   name      String
   email     String
   subject   String
   message   String
   createdAt DateTime @default(now())
-  updatedAt DateTime
+  updatedAt DateTime @updatedAt
 }
 
 model Payment {
-  id            String      @id
+  id            String      @id @default(cuid())
   userId        String
   reservationId String      @unique
   method        String?
   amount        Int
   status        String      @default("unpaid")
   createdAt     DateTime    @default(now())
-  updatedAt     DateTime
+  updatedAt     DateTime    @updatedAt
   Reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
 }
 
 model Reservation {
-  id                 String    @id
+  id                 String    @id @default(cuid())
   userId             String
   roomId             String
   checkIn            DateTime
   checkOut           DateTime
   price              Int
   createdAt          DateTime  @default(now())
-  updatedAt          DateTime
+  updatedAt          DateTime  @updatedAt
   cancellationDate   DateTime?
   cancellationReason String?
   refundAmount       Int?
@@ -77,30 +77,30 @@ model Reservation {
 }
 
 model Room {
-  id            String          @id
+  id            String          @id @default(cuid())
   name          String
   description   String
   price         Int
   capacity      Int             @default(1)
   createdAt     DateTime        @default(now())
-  updatedAt     DateTime
+  updatedAt     DateTime        @updatedAt
   image         String
   Reservation   Reservation[]
   RoomAmenities RoomAmenities[]
 }
 
 model RoomAmenities {
-  id          String    @id
+  id          String    @id @default(cuid())
   roomId      String
   amenitiesId String
   createdAt   DateTime  @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime  @updatedAt
   Amenities   Amenities @relation(fields: [amenitiesId], references: [id], onDelete: Cascade)
   Room        Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
 }
 
 model User {
-  id            String        @id
+  id            String        @id @default(cuid())
   name          String?
   email         String        @unique
   emailVerified DateTime?
@@ -108,7 +108,7 @@ model User {
   role          String        @default("user")
   phone         String?
   createdAt     DateTime      @default(now())
-  updatedAt     DateTime
+  updatedAt     DateTime      @updatedAt
   Account       Account[]
   Reservation   Reservation[]
 }

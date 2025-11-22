@@ -42,14 +42,14 @@ const CheckoutPage = async ({
         status,
       },
       include: {
-        reservation: {
+        Reservation: {
           include: {
-            room: {
+            Room: {
               select: {
                 name: true,
               },
             },
-            user: {
+            User: {
               select: {
                 name: true,
                 email: true,
@@ -63,12 +63,12 @@ const CheckoutPage = async ({
     if (status === "paid") {
       const { sendPaymentSuccessEmail } = await import("@/lib/email");
       await sendPaymentSuccessEmail({
-        customerName: payment.reservation.user.name || "Guest",
-        customerEmail: payment.reservation.user.email || "",
+        customerName: payment.Reservation.User.name || "Guest",
+        customerEmail: payment.Reservation.User.email || "",
         reservationId: payment.reservationId,
-        roomName: payment.reservation.room.name,
-        checkIn: payment.reservation.checkIn,
-        checkOut: payment.reservation.checkOut,
+        roomName: payment.Reservation.Room.name,
+        checkIn: payment.Reservation.checkIn,
+        checkOut: payment.Reservation.checkOut,
         totalAmount: payment.amount,
         paymentMethod: "Online Payment",
       });

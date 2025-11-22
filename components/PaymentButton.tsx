@@ -14,7 +14,7 @@ declare global {
 
 const PaymentButton = ({ reservation }: { reservation: reservationProps }) => {
   const [isPending, startTransition] = useTransition();
-  const paymentStatus = reservation.Payment?.[0]?.status;
+  const paymentStatus = reservation.Payment?.status;
 
   const checkInDate = new Date(reservation.checkIn);
   const today = new Date();

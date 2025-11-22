@@ -13,13 +13,13 @@ interface ReservationWithDetails {
   price: number;
   status: string;
   createdAt: Date;
-  room: {
+  Room: {
     name: string;
     image: string;
   };
-  Payment: Array<{
+  Payment: {
     status: string;
-  }>;
+  } | null;
 }
 
 const ReservationsPage = async () => {
@@ -31,7 +31,7 @@ const ReservationsPage = async () => {
   const reservations = (await prisma.reservation.findMany({
     where: { userId: session.user.id },
     include: {
-      room: {
+      Room: {
         select: {
           name: true,
           image: true,
@@ -84,7 +84,7 @@ const ReservationsPage = async () => {
               const today = new Date();
               today.setHours(0, 0, 0, 0);
               const isExpired = checkInDate < today;
-              const paymentStatus = reservation.Payment[0]?.status;
+              const paymentStatus = reservation.Payment?.status;
 
               return (
                 <div
@@ -92,10 +92,10 @@ const ReservationsPage = async () => {
                   className="bg-white shadow-lg rounded-sm transition duration-100 hover:shadow-sm"
                 >
                   <div className="h-[260px] w-auto rounded-t-sm relative">
-                    {reservation.room.image && (
+                    {reservation.Room.image && (
                       <Image
-                        src={reservation.room.image}
-                        alt={reservation.room.name}
+                        src={reservation.Room.image}
+                        alt={reservation.Room.name}
                         fill
                         className="w-full h-full object-cover rounded-t-sm"
                       />
@@ -107,7 +107,7 @@ const ReservationsPage = async () => {
                         href={`/checkout/${reservation.id}`}
                         className="hover:text-gray-800 transition duration-150"
                       >
-                        {reservation.room.name}
+                        {reservation.Room.name}
                       </Link>
                     </h4>
                     <h4 className="text-2xl mb-7">

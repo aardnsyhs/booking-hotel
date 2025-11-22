@@ -54,14 +54,14 @@ export const POST = async (request: Request) => {
         reservationId,
       },
       include: {
-        reservation: {
+        Reservation: {
           include: {
-            room: {
+            Room: {
               select: {
                 name: true,
               },
             },
-            user: {
+            User: {
               select: {
                 name: true,
                 email: true,
@@ -74,12 +74,12 @@ export const POST = async (request: Request) => {
 
     const { sendPaymentSuccessEmail } = await import("@/lib/email");
     await sendPaymentSuccessEmail({
-      customerName: transaction.reservation.user.name || "Guest",
-      customerEmail: transaction.reservation.user.email || "",
+      customerName: transaction.Reservation.User.name || "Guest",
+      customerEmail: transaction.Reservation.User.email || "",
       reservationId: transaction.reservationId,
-      roomName: transaction.reservation.room.name,
-      checkIn: transaction.reservation.checkIn,
-      checkOut: transaction.reservation.checkOut,
+      roomName: transaction.Reservation.Room.name,
+      checkIn: transaction.Reservation.checkIn,
+      checkOut: transaction.Reservation.checkOut,
       totalAmount: transaction.amount,
       paymentMethod: paymentType || "Online Payment",
     });

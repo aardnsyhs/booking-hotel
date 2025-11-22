@@ -2,14 +2,14 @@ import { Prisma } from "@prisma/client";
 
 export type reservationProps = Prisma.ReservationGetPayload<{
   include: {
-    room: {
+    Room: {
       select: {
         name: true;
         image: true;
         price: true;
       };
     };
-    user: {
+    User: {
       select: {
         name: true;
         email: true;
