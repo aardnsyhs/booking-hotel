@@ -5,7 +5,15 @@ import { BookingCancellationEmail } from "@/emails/booking-cancellation";
 import { formatCurrency, formatDate } from "./utils";
 import { differenceInCalendarDays } from "date-fns";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy initialization to avoid build-time errors
+let resend: Resend | null = null;
+
+function getResendClient() {
+  if (!resend && process.env.RESEND_API_KEY) {
+    resend = new Resend(process.env.RESEND_API_KEY);
+  }
+  return resend;
+}
 
 interface BookingEmailData {
   customerName: string;
@@ -29,7 +37,8 @@ interface CancellationEmailData extends BookingEmailData {
 
 export async function sendBookingConfirmationEmail(data: BookingEmailData) {
   try {
-    if (!process.env.RESEND_API_KEY) {
+    const client = getResendClient();
+    if (!client) {
       return {
         success: false,
         error: "RESEND_API_KEY not configured",
@@ -43,7 +52,7 @@ export async function sendBookingConfirmationEmail(data: BookingEmailData) {
       ? "delivered@resend.dev"
       : data.customerEmail;
 
-    const { data: emailData, error } = await resend.emails.send({
+    const { data: emailData, error } = await client.emails.send({
       from: "Hotel Booking <onboarding@resend.dev>",
       to: [recipientEmail],
       subject: `Booking Confirmation - ${data.reservationId}`,
@@ -70,7 +79,8 @@ export async function sendBookingConfirmationEmail(data: BookingEmailData) {
 
 export async function sendPaymentSuccessEmail(data: PaymentEmailData) {
   try {
-    if (!process.env.RESEND_API_KEY) {
+    const client = getResendClient();
+    if (!client) {
       return {
         success: false,
         error: "RESEND_API_KEY not configured",
@@ -82,7 +92,7 @@ export async function sendPaymentSuccessEmail(data: PaymentEmailData) {
       ? "delivered@resend.dev"
       : data.customerEmail;
 
-    const { data: emailData, error } = await resend.emails.send({
+    const { data: emailData, error } = await client.emails.send({
       from: "Hotel Booking <onboarding@resend.dev>",
       to: [recipientEmail],
       subject: `Payment Successful - ${data.reservationId}`,
@@ -111,7 +121,8 @@ export async function sendBookingCancellationEmail(
   data: CancellationEmailData
 ) {
   try {
-    if (!process.env.RESEND_API_KEY) {
+    const client = getResendClient();
+    if (!client) {
       return {
         success: false,
         error: "RESEND_API_KEY not configured",
@@ -123,7 +134,7 @@ export async function sendBookingCancellationEmail(
       ? "delivered@resend.dev"
       : data.customerEmail;
 
-    const { data: emailData, error } = await resend.emails.send({
+    const { data: emailData, error } = await client.emails.send({
       from: "Hotel Booking <onboarding@resend.dev>",
       to: [recipientEmail],
       subject: `Booking Cancelled - ${data.reservationId}`,

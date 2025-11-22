@@ -5,17 +5,17 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@auth/core': 0.41.1
+  '@auth/core': 0.41.0
 
 importers:
 
   .:
     dependencies:
       '@auth/prisma-adapter':
-        specifier: ^2.9.0
+        specifier: ^2.11.1
         version: 2.11.1(@prisma/client@6.19.0(prisma@6.19.0(typescript@5.9.3))(typescript@5.9.3))
       '@prisma/client':
-        specifier: ^6.7.0
+        specifier: ^6.19.0
         version: 6.19.0(prisma@6.19.0(typescript@5.9.3))(typescript@5.9.3)
       '@react-email/components':
         specifier: ^1.0.1
@@ -36,7 +36,7 @@ importers:
         specifier: 15.3.1
         version: 15.3.1(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       next-auth:
-        specifier: ^5.0.0-beta.27
+        specifier: ^5.0.0-beta.30
         version: 5.0.0-beta.30(next@15.3.1(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
       react:
         specifier: ^19.0.0
@@ -88,7 +88,7 @@ importers:
         specifier: 15.3.1
         version: 15.3.1(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3)
       prisma:
-        specifier: ^6.7.0
+        specifier: ^6.19.0
         version: 6.19.0(typescript@5.9.3)
       tailwindcss:
         specifier: ^4
@@ -103,12 +103,12 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
-  '@auth/core@0.41.1':
-    resolution: {integrity: sha512-t9cJ2zNYAdWMacGRMT6+r4xr1uybIdmYa49calBPeTqwgAFPV/88ac9TEvCR85pvATiSPt8VaNf+Gt24JIT/uw==}
+  '@auth/core@0.41.0':
+    resolution: {integrity: sha512-Wd7mHPQ/8zy6Qj7f4T46vg3aoor8fskJm6g2Zyj064oQ3+p0xNZXAV60ww0hY+MbTesfu29kK14Zk5d5JTazXQ==}
     peerDependencies:
       '@simplewebauthn/browser': ^9.0.1
       '@simplewebauthn/server': ^9.0.2
-      nodemailer: ^7.0.7
+      nodemailer: ^6.8.0
     peerDependenciesMeta:
       '@simplewebauthn/browser':
         optional: true
@@ -3031,7 +3031,7 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@auth/core@0.41.1':
+  '@auth/core@0.41.0':
     dependencies:
       '@panva/hkdf': 1.2.1
       jose: 6.1.2
@@ -3041,7 +3041,7 @@ snapshots:
 
   '@auth/prisma-adapter@2.11.1(@prisma/client@6.19.0(prisma@6.19.0(typescript@5.9.3))(typescript@5.9.3))':
     dependencies:
-      '@auth/core': 0.41.1
+      '@auth/core': 0.41.0
       '@prisma/client': 6.19.0(prisma@6.19.0(typescript@5.9.3))(typescript@5.9.3)
     transitivePeerDependencies:
       - '@simplewebauthn/browser'
@@ -5227,7 +5227,7 @@ snapshots:
 
   next-auth@5.0.0-beta.30(next@15.3.1(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0):
     dependencies:
-      '@auth/core': 0.41.1
+      '@auth/core': 0.41.0
       next: 15.3.1(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       react: 19.2.0
 
