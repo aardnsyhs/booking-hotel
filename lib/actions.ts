@@ -212,8 +212,27 @@ export const createReserve = async (
             },
           },
         },
+        include: {
+          room: {
+            select: {
+              name: true,
+            },
+          },
+        },
       });
       reservationId = reservation.id;
+
+      // Send booking confirmation email
+      const { sendBookingConfirmationEmail } = await import("./email");
+      await sendBookingConfirmationEmail({
+        customerName: name,
+        customerEmail: session.user.email as string,
+        reservationId: reservation.id,
+        roomName: reservation.room.name,
+        checkIn: startDate,
+        checkOut: endDate,
+        totalAmount: total,
+      });
     });
   } catch (err) {
     console.error(err);

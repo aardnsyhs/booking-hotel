@@ -35,14 +35,46 @@ const CheckoutPage = async ({
       status = "failure";
     }
 
-    await prisma.payment.update({
+    const payment = await prisma.payment.update({
       where: {
         reservationId,
       },
       data: {
         status,
       },
+      include: {
+        reservation: {
+          include: {
+            room: {
+              select: {
+                name: true,
+              },
+            },
+            user: {
+              select: {
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+      },
     });
+
+    // Send payment success email if status is paid
+    if (status === "paid") {
+      const { sendPaymentSuccessEmail } = await import("@/lib/email");
+      await sendPaymentSuccessEmail({
+        customerName: payment.reservation.user.name || "Guest",
+        customerEmail: payment.reservation.user.email || "",
+        reservationId: payment.reservationId,
+        roomName: payment.reservation.room.name,
+        checkIn: payment.reservation.checkIn,
+        checkOut: payment.reservation.checkOut,
+        totalAmount: payment.amount,
+        paymentMethod: "Online Payment",
+      });
+    }
   }
 
   return (

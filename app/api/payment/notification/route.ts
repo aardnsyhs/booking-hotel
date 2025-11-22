@@ -54,7 +54,38 @@ export const POST = async (request: Request) => {
       where: {
         reservationId,
       },
+      include: {
+        reservation: {
+          include: {
+            room: {
+              select: {
+                name: true,
+              },
+            },
+            user: {
+              select: {
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+      },
     });
+
+    // Send payment success email
+    const { sendPaymentSuccessEmail } = await import("@/lib/email");
+    await sendPaymentSuccessEmail({
+      customerName: transaction.reservation.user.name || "Guest",
+      customerEmail: transaction.reservation.user.email || "",
+      reservationId: transaction.reservationId,
+      roomName: transaction.reservation.room.name,
+      checkIn: transaction.reservation.checkIn,
+      checkOut: transaction.reservation.checkOut,
+      totalAmount: transaction.amount,
+      paymentMethod: paymentType || "Online Payment",
+    });
+
     responseData = transaction;
   } else if (
     transactionStatus === "cancel" ||
