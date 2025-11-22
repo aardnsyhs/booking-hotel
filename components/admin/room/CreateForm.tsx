@@ -178,7 +178,6 @@ const CreateForm = ({ amenities }: { amenities: Amenities[] }) => {
               </span>
             </div>
           </div>
-          {/* General Message */}
           {state?.message ? (
             <div className="mb-4 bg-red-200 p-2">
               <span className="text-sm text-gray-700 mt-2">

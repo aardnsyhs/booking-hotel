@@ -11,6 +11,7 @@ interface ReservationWithDetails {
   checkIn: Date;
   checkOut: Date;
   price: number;
+  status: string;
   createdAt: Date;
   room: {
     name: string;
@@ -140,18 +141,22 @@ const ReservationsPage = async () => {
                     <div className="flex items-center justify-between">
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          isExpired && paymentStatus !== "paid"
-                            ? "bg-gray-100 text-gray-800"
-                            : paymentStatus === "paid"
-                            ? "bg-green-100 text-green-800"
-                            : paymentStatus === "failure"
+                          reservation.status === "cancelled"
                             ? "bg-red-100 text-red-800"
-                            : "bg-yellow-100 text-yellow-800"
+                            : isExpired && paymentStatus !== "paid"
+                              ? "bg-gray-100 text-gray-800"
+                              : paymentStatus === "paid"
+                                ? "bg-green-100 text-green-800"
+                                : paymentStatus === "failure"
+                                  ? "bg-red-100 text-red-800"
+                                  : "bg-yellow-100 text-yellow-800"
                         }`}
                       >
-                        {isExpired && paymentStatus !== "paid"
-                          ? "EXPIRED"
-                          : paymentStatus?.toUpperCase() || "UNPAID"}
+                        {reservation.status === "cancelled"
+                          ? "CANCELLED"
+                          : isExpired && paymentStatus !== "paid"
+                            ? "EXPIRED"
+                            : paymentStatus?.toUpperCase() || "UNPAID"}
                       </span>
                       <Link
                         href={`/checkout/${reservation.id}`}

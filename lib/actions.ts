@@ -240,3 +240,82 @@ export const createReserve = async (
 
   redirect(`/checkout/${reservationId}`);
 };
+
+export const requestCancellation = async (
+  reservationId: string,
+  reason: string
+) => {
+  const session = await auth();
+  if (!session || !session.user || !session.user.id) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  try {
+    const reservation = await prisma.reservation.findUnique({
+      where: { id: reservationId },
+      include: {
+        Payment: true,
+      },
+    });
+
+    if (!reservation) {
+      return { success: false, error: "Reservation not found" };
+    }
+
+    if (reservation.userId !== session.user.id) {
+      return { success: false, error: "Unauthorized" };
+    }
+
+    if (reservation.status === "cancelled") {
+      return { success: false, error: "Reservation already cancelled" };
+    }
+
+    // Check if payment is paid
+    const payment = reservation.Payment[0];
+    if (!payment || payment.status !== "paid") {
+      return {
+        success: false,
+        error: "Can only cancel paid reservations",
+      };
+    }
+
+    // Calculate refund based on cancellation policy
+    const { getCancellationPolicy, calculateRefundAmount } = await import(
+      "./cancellation-policy"
+    );
+    const policy = getCancellationPolicy(reservation.checkIn, payment.amount);
+
+    if (!policy.canCancel) {
+      return { success: false, error: policy.reason };
+    }
+
+    const refundAmount = calculateRefundAmount(
+      payment.amount,
+      policy.refundPercentage
+    );
+
+    // Update reservation with cancellation request
+    await prisma.reservation.update({
+      where: { id: reservationId },
+      data: {
+        status: "cancelled",
+        cancellationReason: reason,
+        cancellationDate: new Date(),
+        refundAmount,
+        refundStatus: "pending",
+      },
+    });
+
+    // Don't revalidate here - let the client handle refresh after modal closes
+    // This prevents the component from unmounting before modal is shown
+
+    return {
+      success: true,
+      refundAmount,
+      refundPercentage: policy.refundPercentage,
+    };
+  } catch (error) {
+    console.error("Cancellation error:", error);
+    return { success: false, error: "Failed to cancel reservation" };
+  }
+};

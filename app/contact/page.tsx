@@ -62,7 +62,6 @@ const ContactPage = () => {
               </li>
             </ul>
           </div>
-          {/* Contact Form */}
           <ContactForm />
         </div>
       </div>

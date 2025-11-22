@@ -53,7 +53,6 @@ const RoomDetail = async ({ roomId }: { roomId: string }) => {
               <span className="text-gray-400 text-sm">/Night</span>
             </div>
           </div>
-          {/* Reservation Form */}
           <ReserveForm room={room} />
         </div>
       </div>

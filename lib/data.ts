@@ -65,20 +65,8 @@ export const getReservationById = async (id: string) => {
     const result = await prisma.reservation.findUnique({
       where: { id },
       include: {
-        room: {
-          select: {
-            name: true,
-            image: true,
-            price: true,
-          },
-        },
-        user: {
-          select: {
-            name: true,
-            email: true,
-            phone: true,
-          },
-        },
+        room: true,
+        user: true,
         Payment: true,
       },
     });

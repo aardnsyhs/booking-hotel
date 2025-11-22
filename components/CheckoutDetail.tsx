@@ -3,6 +3,8 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 import { differenceInCalendarDays } from "date-fns";
 import Image from "next/image";
 import PaymentButton from "./PaymentButton";
+import CancelBookingButton from "./CancelBookingButton";
+import { getCancellationPolicy } from "@/lib/cancellation-policy";
 
 const CheckoutDetail = async ({ reservationId }: { reservationId: string }) => {
   const reservation = await getReservationById(reservationId);
@@ -44,8 +46,47 @@ const CheckoutDetail = async ({ reservationId }: { reservationId: string }) => {
             </div>
           </div>
         </div>
-        {/* Payment Button */}
-        <PaymentButton reservation={reservation} />
+        {reservation.status !== "cancelled" && (
+          <PaymentButton reservation={reservation} />
+        )}
+        {reservation.status !== "cancelled" &&
+          reservation.Payment[0]?.status === "paid" && (
+            <>
+              {(() => {
+                const policy = getCancellationPolicy(
+                  reservation.checkIn,
+                  reservation.Payment[0].amount
+                );
+                return (
+                  <CancelBookingButton
+                    reservationId={reservation.id}
+                    checkInDate={reservation.checkIn}
+                    totalAmount={reservation.Payment[0].amount}
+                    canCancel={policy.canCancel}
+                    cancelReason={policy.reason}
+                  />
+                );
+              })()}
+            </>
+          )}
+        {reservation.status === "cancelled" && (
+          <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-sm">
+            <h3 className="font-semibold text-red-800 mb-2">
+              Booking Cancelled
+            </h3>
+            <p className="text-sm text-red-700 mb-2">
+              <strong>Reason:</strong> {reservation.cancellationReason}
+            </p>
+            <p className="text-sm text-red-700 mb-2">
+              <strong>Refund Amount:</strong>{" "}
+              {formatCurrency(reservation.refundAmount || 0)}
+            </p>
+            <p className="text-sm text-red-700">
+              <strong>Refund Status:</strong>{" "}
+              <span className="uppercase">{reservation.refundStatus}</span>
+            </p>
+          </div>
+        )}
       </div>
       <div className="border border-gray-200 px-3 py-5 bg-white rounded-sm">
         <table className="w-full">
@@ -108,10 +149,10 @@ const CheckoutDetail = async ({ reservationId }: { reservationId: string }) => {
                     reservation.Payment[0]?.status === "paid"
                       ? "bg-green-100 text-green-800"
                       : reservation.Payment[0]?.status === "pending"
-                      ? "bg-yellow-100 text-yellow-800"
-                      : reservation.Payment[0]?.status === "failure"
-                      ? "bg-red-100 text-red-800"
-                      : "bg-gray-100 text-gray-800"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : reservation.Payment[0]?.status === "failure"
+                          ? "bg-red-100 text-red-800"
+                          : "bg-gray-100 text-gray-800"
                   }`}
                 >
                   {reservation.Payment[0]?.status?.toUpperCase() || "UNPAID"}

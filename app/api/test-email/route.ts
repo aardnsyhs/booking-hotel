@@ -3,8 +3,6 @@ import { sendBookingConfirmationEmail } from "@/lib/email";
 
 export async function GET() {
   try {
-    console.log("🧪 Testing email configuration...");
-
     // Check if API key exists
     if (!process.env.RESEND_API_KEY) {
       return NextResponse.json(
