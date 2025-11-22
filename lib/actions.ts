@@ -278,7 +278,7 @@ export const requestCancellation = async (
     const { getCancellationPolicy, calculateRefundAmount } = await import(
       "./cancellation-policy"
     );
-    const policy = getCancellationPolicy(reservation.checkIn, payment.amount);
+    const policy = getCancellationPolicy(reservation.checkIn);
 
     if (!policy.canCancel) {
       return { success: false, error: policy.reason };

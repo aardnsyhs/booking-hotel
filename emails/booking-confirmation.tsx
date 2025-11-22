@@ -11,23 +11,23 @@ import {
 } from "@react-email/components";
 
 interface BookingConfirmationEmailProps {
-  customerName: string;
-  reservationId: string;
-  roomName: string;
-  checkIn: string;
-  checkOut: string;
-  nights: number;
-  totalAmount: string;
+  customerName?: string;
+  reservationId?: string;
+  roomName?: string;
+  checkIn?: string;
+  checkOut?: string;
+  nights?: number;
+  totalAmount?: string;
 }
 
 export const BookingConfirmationEmail = ({
-  customerName,
-  reservationId,
-  roomName,
-  checkIn,
-  checkOut,
-  nights,
-  totalAmount,
+  customerName = "Guest",
+  reservationId = "RES-XXXXX",
+  roomName = "Deluxe Room",
+  checkIn = "January 1, 2024",
+  checkOut = "January 3, 2024",
+  nights = 2,
+  totalAmount = "Rp 1,000,000",
 }: BookingConfirmationEmailProps) => {
   return (
     <Html>
@@ -60,7 +60,7 @@ export const BookingConfirmationEmail = ({
               <strong>Duration:</strong> {nights} night{nights > 1 ? "s" : ""}
             </Text>
             <Hr style={hr} />
-            <Text style={totalAmount}>
+            <Text style={totalAmountStyle}>
               <strong>Total Amount:</strong> {totalAmount}
             </Text>
           </Section>
@@ -121,6 +121,8 @@ const text = {
   fontSize: "16px",
   lineHeight: "26px",
   padding: "0 40px",
+  wordBreak: "break-word" as const,
+  overflowWrap: "break-word" as const,
 };
 
 const bookingDetails = {
@@ -128,6 +130,8 @@ const bookingDetails = {
   borderRadius: "8px",
   margin: "20px 40px",
   padding: "20px",
+  maxWidth: "520px",
+  boxSizing: "border-box" as const,
 };
 
 const detailRow = {
@@ -135,12 +139,14 @@ const detailRow = {
   fontSize: "14px",
   lineHeight: "24px",
   margin: "8px 0",
+  wordBreak: "break-word" as const,
+  overflowWrap: "break-word" as const,
 };
 
-const totalAmount = {
+const totalAmountStyle = {
   color: "#333",
   fontSize: "16px",
-  fontWeight: "bold",
+  fontWeight: "bold" as const,
   margin: "16px 0 8px",
 };
 

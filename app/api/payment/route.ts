@@ -25,14 +25,14 @@ export const POST = async (request: Request) => {
     const parameter = {
       transaction_details: {
         order_id: uniqueOrderId,
-        gross_amount: reservation.Payment?.[0]?.amount || 0,
+        gross_amount: reservation.Payment?.amount || 0,
       },
       credit_card: {
         secure: true,
       },
       customer_details: {
-        first_name: reservation.user.name,
-        email: reservation.user.email,
+        first_name: reservation.User.name,
+        email: reservation.User.email,
       },
       callbacks: {
         finish: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/${reservation.id}`,

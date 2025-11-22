@@ -63,7 +63,7 @@ const EditForm = ({
     null
   );
 
-  const checkedAmenities = room.RoomAmenities.map((item) => item.amenities.id);
+  const checkedAmenities = room.RoomAmenities.map((item) => item.Amenities.id);
 
   return (
     <form action={formAction}>

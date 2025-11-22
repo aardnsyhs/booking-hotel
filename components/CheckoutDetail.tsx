@@ -53,10 +53,7 @@ const CheckoutDetail = async ({ reservationId }: { reservationId: string }) => {
           reservation.Payment?.status === "paid" && (
             <>
               {(() => {
-                const policy = getCancellationPolicy(
-                  reservation.checkIn,
-                  reservation.Payment.amount
-                );
+                const policy = getCancellationPolicy(reservation.checkIn);
                 return (
                   <CancelBookingButton
                     reservationId={reservation.id}

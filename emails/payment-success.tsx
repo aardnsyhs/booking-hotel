@@ -11,23 +11,23 @@ import {
 } from "@react-email/components";
 
 interface PaymentSuccessEmailProps {
-  customerName: string;
-  reservationId: string;
-  roomName: string;
-  checkIn: string;
-  checkOut: string;
-  totalAmount: string;
-  paymentMethod: string;
+  customerName?: string;
+  reservationId?: string;
+  roomName?: string;
+  checkIn?: string;
+  checkOut?: string;
+  totalAmount?: string;
+  paymentMethod?: string;
 }
 
 export const PaymentSuccessEmail = ({
-  customerName,
-  reservationId,
-  roomName,
-  checkIn,
-  checkOut,
-  totalAmount,
-  paymentMethod,
+  customerName = "Guest",
+  reservationId = "RES-XXXXX",
+  roomName = "Deluxe Room",
+  checkIn = "January 1, 2024",
+  checkOut = "January 3, 2024",
+  totalAmount = "Rp 1,000,000",
+  paymentMethod = "Online Payment",
 }: PaymentSuccessEmailProps) => {
   return (
     <Html>
@@ -64,7 +64,7 @@ export const PaymentSuccessEmail = ({
             <Text style={detailRow}>
               <strong>Payment Method:</strong> {paymentMethod}
             </Text>
-            <Text style={totalAmount}>
+            <Text style={totalAmountStyle}>
               <strong>Amount Paid:</strong> {totalAmount}
             </Text>
           </Section>
@@ -136,6 +136,8 @@ const text = {
   lineHeight: "26px",
   padding: "0 40px",
   marginTop: "20px",
+  wordBreak: "break-word" as const,
+  overflowWrap: "break-word" as const,
 };
 
 const bookingDetails = {
@@ -143,6 +145,8 @@ const bookingDetails = {
   borderRadius: "8px",
   margin: "20px 40px",
   padding: "20px",
+  maxWidth: "520px",
+  boxSizing: "border-box" as const,
 };
 
 const detailRow = {
@@ -150,12 +154,14 @@ const detailRow = {
   fontSize: "14px",
   lineHeight: "24px",
   margin: "8px 0",
+  wordBreak: "break-word" as const,
+  overflowWrap: "break-word" as const,
 };
 
-const totalAmount = {
+const totalAmountStyle = {
   color: "#10b981",
   fontSize: "18px",
-  fontWeight: "bold",
+  fontWeight: "bold" as const,
   margin: "16px 0 8px",
 };
 
@@ -169,6 +175,8 @@ const infoBox = {
   borderRadius: "8px",
   margin: "20px 40px",
   padding: "20px",
+  maxWidth: "520px",
+  boxSizing: "border-box" as const,
 };
 
 const infoText = {
@@ -176,6 +184,8 @@ const infoText = {
   fontSize: "14px",
   lineHeight: "22px",
   margin: "0",
+  wordBreak: "break-word" as const,
+  overflowWrap: "break-word" as const,
 };
 
 const footer = {

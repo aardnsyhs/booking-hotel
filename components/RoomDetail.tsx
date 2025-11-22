@@ -32,7 +32,7 @@ const RoomDetail = async ({ roomId }: { roomId: string }) => {
           {room.RoomAmenities.map((item) => (
             <div className="flex gap-1 py-1" key={item.id}>
               <IoCheckmark className="size-5" />
-              <span>{item.amenities.name}</span>
+              <span>{item.Amenities.name}</span>
             </div>
           ))}
         </div>
